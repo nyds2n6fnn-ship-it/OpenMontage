@@ -7,7 +7,7 @@ HyperFrames is a seek-driven runtime. Build one paused timeline per composition,
 ```javascript
 const tl = gsap.timeline({
   paused: true,
-  defaults: { duration: 0.5, ease: "power2.out" },
+  defaults: { duration: 0.5, ease: "power3.out" },
 });
 
 tl.to(".a", { x: 100 }).to(".b", { y: 50 }).to(".c", { opacity: 0 });
@@ -16,7 +16,7 @@ tl.to(".a", { x: 100 }).to(".b", { y: 50 }).to(".c", { opacity: 0 });
 Timeline options:
 
 - **paused: true** — required in HyperFrames. The framework drives the playhead.
-- **repeat**, **yoyo** — apply to the whole timeline. `repeat: -1` is forbidden; use finite counts.
+- **repeat**, **yoyo** — apply to the whole timeline. `repeat: -1` requires a finite root `data-duration` (export clips to it); otherwise use finite counts.
 - **defaults** — vars merged into every child tween. Use this instead of repeating `ease` and `duration` on every line.
 
 ## Position Parameter

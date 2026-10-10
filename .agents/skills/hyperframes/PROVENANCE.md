@@ -61,3 +61,13 @@ done
 ## Future automation
 
 Upstream 0.7 added `hyperframes skills` — a CLI that installs/updates HF skills with a freshness manifest and version check. Consider adopting it as the mechanical source of truth instead of hand-vendoring (would also auto-flag staleness across multi-agent setups). See `feat(cli): skills freshness — version check, manifest, global install + multi-agent mirror (#1753)` in HF history.
+
+## 2026-10-10 resync via `npx skills add heygen-com/hyperframes`
+
+Re-synced from upstream `main` using the `skills` CLI (`npx skills add heygen-com/hyperframes -y`). This updates the existing vendored skills in place, adds new upstream skills, and symlinks each one into `.claude/skills/` for Claude Code:
+
+- **New:** `embedded-captions`, `faceless-explainer`, `figma`, `general-video`, `hyperframes-audio`, `hyperframes-keyframes`, `hyperframes-studio`, `pr-to-video`, `product-launch-video`, `slideshow`, `talking-head-recut`
+- **Updated:** `hyperframes`, `hyperframes-animation`, `hyperframes-cli`, `hyperframes-core`, `hyperframes-creative`, `hyperframes-registry`, `media-use`, `motion-graphics`, `music-to-video`, `remotion-to-hyperframes`
+- **Kept as-is (no longer published upstream):** `hyperframes-media`, `website-to-video`
+
+The installer deleted this file, so it was restored by hand. Re-running the same command is now the supported way to update.
