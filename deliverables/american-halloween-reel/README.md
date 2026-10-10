@@ -1,27 +1,32 @@
-# American Halloween (autumn) — Instagram Reel, v2
+# «Летели облака» — Instagram mini music video (9:16)
 
-Light, positive, atmospheric 9:16 reel with no words, built from three source clips
-(Google Drive folder `1dv8HsLY3ivG25avBysQyt_vzb7LSUmlp`). No horror: just a warm
-"American autumn / Halloween" filter.
+Warm "American autumn / Halloween" look, no horror. Cut to the first verse and chorus of
+DDT «Летели облака» (song 0:34.85 → 1:07.0), from three source clips
+(Google Drive folder `1dv8HsLY3ivG25avBysQyt_vzb7LSUmlp`).
 
-- **File:** `american-autumn-reel_9x16.mp4` — 1080×1920, 30 fps, 17.0 s, H.264
-- **Audio:** silent track. Add DDT "Летели облака" in the Instagram editor
-  (the music is licensed there; a copyrighted track baked into the file can get the Reel muted).
+- **File:** `leteli-oblaka-clip_9x16.mp4` — 1080×1920, 30 fps, 32.1 s, H.264 + AAC 256k, −14 LUFS
+- Lyric timings come from a faster-whisper transcription; cuts are snapped to the beat grid (~152 BPM).
 
-## Edit
+## Shot list
 
-| Time | Source | Treatment |
-|------|--------|-----------|
-| 0.0–4.5 | `IMG_8080` clouds over the field & fence | slowed ~0.53× with frame blending, fade in |
-| 3.8–9.8 | `IMG_8092` 39–45 s, golden pine forest, she reaches up | gentle push-in |
-| 9.1–17.0 | `IMG_8100` birds over the autumn field | letterbox removed, 9:16 reframe, fade out |
+| Song | Line | Shot |
+|------|------|------|
+| 34.85 | intro / «Летели облака» | cloud sky close-up, slow drift down to her head, fade-in |
+| 38.84 | «летели далеко» | her at the fence, clouds rolling (slow-mo), dissolve |
+| 42.41 | «как мамина рука» | forest, medium, she raises her arm (slow-mo) |
+| 46.39 | «как папино трико» | close on her walking legs |
+| 48.82 | «как рыбы-корабли» | flock against the sky, like a school of fish (slow-mo) |
+| 52.77 | «как мысли дурака» | close, mirrored: she crouches |
+| 54.77 | «над стёклами земли» | tilt from the pine tops down to the ground |
+| 58.00 | «Летели облака» | wide forest + clouds double exposure, dissolve |
+| 61.55 | «летели облака» | birds over her + faint clouds double exposure, fade-out |
 
-Soft 0.7 s dissolves between shots.
-
-**Look:** golden-hour warmth with amber/orange highlights, light teal shadows,
-pine greens shifted toward olive, soft glow, light grain, gentle vignette.
+**Look:** golden-hour warmth, amber highlights, soft teal shadows, gentle glow (RGB screen blend),
+light grain, soft vignette.
 
 ## Re-render
 
-`render.sh` expects the project layout `projects/american-halloween-reel/`
-(`assets/source/{a.mov,b.mov,c.mp4}`).
+`render_clip.py` expects the project layout `projects/american-halloween-reel/`
+(`assets/source/{a.mov,b.mov,c.mp4}`, `assets/music/ddt_leteli_oblaka.mp3`).
+`python3 render_clip.py` renders all shots and assembles; pass shot indices to re-render
+only those, or `assemble` to only rebuild the final file.
