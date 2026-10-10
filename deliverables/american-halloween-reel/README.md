@@ -1,27 +1,27 @@
-# American Halloween — Instagram Reel
+# American Halloween (autumn) — Instagram Reel, v2
 
-Atmospheric, wordless 9:16 reel built from three source clips
-(Google Drive folder `1dv8HsLY3ivG25avBysQyt_vzb7LSUmlp`).
+Light, positive, atmospheric 9:16 reel with no words, built from three source clips
+(Google Drive folder `1dv8HsLY3ivG25avBysQyt_vzb7LSUmlp`). No horror: just a warm
+"American autumn / Halloween" filter.
 
-- **File:** `american-halloween-reel_9x16.mp4` — 1080×1920, 30 fps, 18.0 s, H.264 + AAC, -14 LUFS
-- **Pipeline:** `cinematic`, render runtime `ffmpeg` (footage-only grade + cut; Remotion not installed)
+- **File:** `american-autumn-reel_9x16.mp4` — 1080×1920, 30 fps, 17.0 s, H.264
+- **Audio:** silent track. Add DDT "Летели облака" in the Instagram editor
+  (the music is licensed there; a copyrighted track baked into the file can get the Reel muted).
 
 ## Edit
 
 | Time | Source | Treatment |
 |------|--------|-----------|
-| 0.0–4.0 | `IMG_8092` pine forest, figure facing camera | fade in from black, slow creeping push-in |
-| 4.0–6.5 | `IMG_8092` 5.0–7.5 s, figure crouches | hard cut closer + sub-boom, dip to black |
-| 6.5–11.0 | `IMG_8080` fence & cloud timelapse | slowed ~0.53× with frame blending, steel storm sky |
-| 11.0–18.0 | `IMG_8100` crows over the figure | letterbox removed, reframed 9:16, sub-boom, long fade out |
+| 0.0–4.5 | `IMG_8080` clouds over the field & fence | slowed ~0.53× with frame blending, fade in |
+| 3.8–9.8 | `IMG_8092` 39–45 s, golden pine forest, she reaches up | gentle push-in |
+| 9.1–17.0 | `IMG_8100` birds over the autumn field | letterbox removed, 9:16 reframe, fade out |
 
-**Look:** day-for-dusk, teal shadows / amber highlights, muted greens, crushed blacks,
-vignette, live film grain, faint candle-like flicker.
+Soft 0.7 s dissolves between shots.
 
-**Sound:** "Dark Ambient" by AtlasAudio (Pixabay Content License — free, no attribution
-required) + two synthesized sub-booms on the hard cuts. No voice, no text.
+**Look:** golden-hour warmth with amber/orange highlights, light teal shadows,
+pine greens shifted toward olive, soft glow, light grain, gentle vignette.
 
 ## Re-render
 
 `render.sh` expects the project layout `projects/american-halloween-reel/`
-(`assets/source/{a.mov,b.mov,c.mp4}`, `assets/music/dark_ambient_atlasaudio.mp3`).
+(`assets/source/{a.mov,b.mov,c.mp4}`).
