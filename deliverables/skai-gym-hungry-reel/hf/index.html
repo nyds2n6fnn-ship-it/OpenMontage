@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>S.K.A.I. GYM — не тренируйся голодной</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter Display"; font-weight: 800; src: local("Inter Display ExtraBold"), local("InterDisplay-ExtraBold"); }
+      @font-face { font-family: "Inter Display"; font-weight: 700; src: local("Inter Display Bold"), local("InterDisplay-Bold"); }
+      @font-face { font-family: "Inter"; font-weight: 800; src: local("Inter ExtraBold"), local("Inter-ExtraBold"); }
+      :root {
+        --bg: #0c0c0e;
+        --ink: #f4f4f2;
+        --mute: #8a8a90;
+        --lime: #c8ff2e;
+        --red: #ff3b2f;
+        --amber: #ffb22e;
+        --card: #18181c;
+        --line: #2a2a30;
+      }
+      body { margin: 0; background: var(--bg); }
+      #root {
+        position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        font-family: "Inter Display", Inter, system-ui, sans-serif; color: var(--ink);
+      }
+      .fill { position: absolute; inset: 0; }
+      #bg {
+        background:
+          radial-gradient(900px 700px at 50% 38%, #1d1d22 0%, rgba(12,12,14,0) 70%),
+          repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 46px),
+          var(--bg);
+      }
+      #brand {
+        position: absolute; top: 190px; left: 0; width: 1080px; display: flex; justify-content: center;
+      }
+      #brand .pill {
+        display: block; padding: 14px 30px; border: 2px solid var(--line); border-radius: 999px;
+        font-weight: 800; font-size: 30px; letter-spacing: 6px; color: var(--ink); background: #121215;
+      }
+      #brand .pill b { color: var(--lime); }
+
+      /* face bubble frame (the video is composited into the hole at 540,1360 r=240) */
+      #halo {
+        position: absolute; left: 540px; top: 1360px; width: 620px; height: 620px; margin: -310px 0 0 -310px;
+        border-radius: 50%; background: radial-gradient(circle, rgba(200,255,46,0.30) 0%, rgba(200,255,46,0) 68%);
+      }
+      #ring {
+        position: absolute; left: 540px; top: 1360px; width: 504px; height: 504px; margin: -252px 0 0 -252px;
+        border-radius: 50%; box-sizing: border-box; border: 8px solid var(--lime); background: #000;
+      }
+
+      .scene { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      .stage { position: absolute; left: 60px; top: 300px; width: 960px; height: 780px; }
+      .h {
+        position: absolute; left: 0; width: 960px; text-align: center; font-weight: 800;
+        font-size: 64px; line-height: 1.05; letter-spacing: -1px; text-transform: uppercase;
+      }
+      .h em { font-style: normal; color: var(--lime); }
+      .h .r { color: var(--red); }
+      .card {
+        position: absolute; box-sizing: border-box; background: var(--card); border: 2px solid var(--line);
+        border-radius: 36px; display: flex; align-items: center;
+      }
+      .label { font-weight: 800; font-size: 50px; text-transform: uppercase; letter-spacing: -0.5px; }
+      .small { font-weight: 700; font-size: 32px; color: var(--mute); text-transform: uppercase; letter-spacing: 2px; }
+      svg { display: block; overflow: visible; }
+
+      /* scene A — symptoms */
+      #a-list .card { left: 0; width: 960px; height: 190px; padding: 0 44px; gap: 40px; }
+      #a-c1 { top: 150px; } #a-c2 { top: 370px; } #a-c3 { top: 590px; }
+      .ico { width: 120px; height: 120px; flex: 0 0 120px; position: relative; }
+      #a-batfill { transform-origin: 0% 50%; }
+      #a-spiral { transform-origin: 60px 60px; }
+
+      /* scene B — fuel gauge */
+      #b-gauge { position: absolute; left: 130px; top: 170px; width: 700px; height: 420px; }
+      #b-needle { transform-origin: 350px 380px; }
+      #b-warn { position: absolute; left: 380px; top: 330px; width: 200px; height: 90px; }
+      #b-eq { position: absolute; left: 0; top: 650px; width: 960px; display: flex; justify-content: center; gap: 26px; }
+      #b-eq .chip {
+        display: block; padding: 22px 34px; border-radius: 24px; background: var(--card); border: 2px solid var(--line);
+        font-weight: 800; font-size: 46px; text-transform: uppercase;
+      }
+      #b-eq .chip em { font-style: normal; color: var(--lime); }
+
+      /* scene C — what burns */
+      #c-fat, #c-mus { top: 200px; width: 450px; height: 520px; flex-direction: column; justify-content: center; gap: 26px; }
+      #c-fat { left: 0; } #c-mus { left: 510px; border-color: rgba(255,59,47,0.55); }
+      #c-cross { position: absolute; left: 115px; top: 95px; width: 220px; height: 220px; }
+      #c-bar { position: relative; width: 330px; height: 34px; border-radius: 17px; background: #2b1412; overflow: hidden; }
+      #c-barfill { position: absolute; left: 0; top: 0; width: 330px; height: 34px; background: var(--red); transform-origin: 0% 50%; }
+      #c-flame { transform-origin: 60px 110px; }
+
+      /* scene D — trash */
+      #d-card { left: 230px; top: 170px; width: 500px; height: 170px; padding: 0 40px; gap: 30px; }
+      #d-bin { position: absolute; left: 360px; top: 470px; width: 240px; height: 290px; }
+      #d-lid { transform-origin: 20px 40px; }
+
+      /* scene E — fix */
+      #e-clock { position: absolute; left: 0; top: 190px; width: 960px; display: flex; justify-content: center; align-items: center; gap: 30px; }
+      #e-hand { transform-origin: 60px 60px; }
+      #e-donut { position: absolute; left: 60px; top: 360px; width: 400px; height: 400px; }
+      #e-legend { position: absolute; left: 510px; top: 420px; width: 450px; }
+      .leg { display: flex; align-items: center; gap: 24px; margin-bottom: 44px; }
+      .dot { display: block; width: 44px; height: 44px; border-radius: 12px; flex: 0 0 44px; }
+      .leg .label { font-size: 44px; }
+      .leg .pct { font-weight: 800; font-size: 72px; line-height: 1; }
+
+      /* scene F — outro */
+      #f-check { position: absolute; left: 330px; top: 140px; width: 300px; height: 300px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-width="1080" data-height="1920" data-duration="26.7">
+      <div id="bg" class="fill clip" data-start="0" data-duration="26.7" data-track-index="0"></div>
+
+      <div id="brand" class="clip" data-start="2.9" data-duration="23.8" data-track-index="1">
+        <span class="pill">S.K.A.I. <b>GYM</b></span>
+      </div>
+      <div id="halo" class="clip" data-start="2.9" data-duration="23.8" data-track-index="2"></div>
+      <div id="ring" class="clip" data-start="2.9" data-duration="23.8" data-track-index="3"></div>
+
+      <!-- A · 3.0–7.25 · «а потом такая: сил нет, голова кружится, жим не идёт» -->
+      <section id="sA" class="scene clip" data-start="3.0" data-duration="4.3" data-track-index="4">
+        <div class="stage">
+          <div id="a-h" class="h" style="top:10px">А потом <span class="r">такая…</span></div>
+          <div id="a-list">
+            <div id="a-c1" class="card">
+              <div class="ico">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <rect x="6" y="34" width="96" height="52" rx="10" fill="none" stroke="#f4f4f2" stroke-width="7"/>
+                  <rect x="104" y="48" width="10" height="24" rx="3" fill="#f4f4f2"/>
+                  <rect id="a-batfill" x="16" y="44" width="76" height="32" rx="4" fill="#ff3b2f"/>
+                </svg>
+              </div>
+              <div class="label">Сил нет</div>
+            </div>
+            <div id="a-c2" class="card">
+              <div class="ico">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <path id="a-spiral" d="M60 60 m0 -6 a6 6 0 1 1 -6 6 a12 12 0 1 1 12 12 a20 20 0 1 1 -20 -20 a28 28 0 1 1 28 28 a36 36 0 1 1 -36 -36 a44 44 0 0 1 44 44" fill="none" stroke="#ffb22e" stroke-width="7" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="label">Голова кружится</div>
+            </div>
+            <div id="a-c3" class="card">
+              <div class="ico">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <g id="a-bar">
+                    <rect x="4" y="30" width="14" height="44" rx="4" fill="#f4f4f2"/>
+                    <rect x="20" y="22" width="14" height="60" rx="4" fill="#f4f4f2"/>
+                    <rect x="34" y="48" width="52" height="8" fill="#f4f4f2"/>
+                    <rect x="86" y="22" width="14" height="60" rx="4" fill="#f4f4f2"/>
+                    <rect x="102" y="30" width="14" height="44" rx="4" fill="#f4f4f2"/>
+                  </g>
+                  <path id="a-arrow" d="M60 84 v28 m-14 -14 l14 14 l14 -14" fill="none" stroke="#ff3b2f" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="label">Жим не идёт</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- B · 7.25–11.45 · «машину не заправил» -->
+      <section id="sB" class="scene clip" data-start="7.25" data-duration="4.25" data-track-index="5">
+        <div class="stage">
+          <div id="b-h" class="h" style="top:10px">Машину <span class="r">не заправила</span></div>
+          <div id="b-gauge">
+            <svg width="700" height="420" viewBox="0 0 700 420">
+              <path d="M70 380 A280 280 0 0 1 630 380" fill="none" stroke="#2a2a30" stroke-width="44" stroke-linecap="round"/>
+              <path d="M70 380 A280 280 0 0 1 150 182" fill="none" stroke="#ff3b2f" stroke-width="44" stroke-linecap="round"/>
+              <path d="M550 182 A280 280 0 0 1 630 380" fill="none" stroke="#c8ff2e" stroke-width="44" stroke-linecap="round"/>
+              <text x="52" y="452" fill="#ff3b2f" font-size="56" font-weight="800" font-family="Inter Display, Inter">E</text>
+              <text x="610" y="452" fill="#c8ff2e" font-size="56" font-weight="800" font-family="Inter Display, Inter">F</text>
+              <g id="b-needle">
+                <rect x="343" y="150" width="14" height="236" rx="7" fill="#f4f4f2"/>
+                <circle cx="350" cy="380" r="30" fill="#f4f4f2"/>
+                <circle cx="350" cy="380" r="12" fill="#0c0c0e"/>
+              </g>
+            </svg>
+          </div>
+          <div id="b-warn">
+            <svg width="200" height="90" viewBox="0 0 200 90">
+              <g id="b-pump" fill="#ff3b2f">
+                <rect x="62" y="12" width="46" height="66" rx="6"/>
+                <rect x="52" y="74" width="66" height="10" rx="3"/>
+                <rect x="70" y="20" width="30" height="20" rx="3" fill="#0c0c0e"/>
+                <path d="M108 30 h12 a8 8 0 0 1 8 8 v26 a6 6 0 0 0 12 0 v-34 l-10 -10" fill="none" stroke="#ff3b2f" stroke-width="6" stroke-linecap="round"/>
+              </g>
+            </svg>
+          </div>
+          <div id="b-eq">
+            <span id="b-chip1" class="chip">Тело = <em>машина</em></span>
+            <span id="b-chip2" class="chip">Еда = <em>топливо</em></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- C · 11.45–18.95 · «организм сжигает не жир… а мышцы» -->
+      <section id="sC" class="scene clip" data-start="11.45" data-duration="7.55" data-track-index="6">
+        <div class="stage">
+          <div id="c-h" class="h" style="top:10px">Без еды тело <span class="r">сжигает</span></div>
+          <div id="c-fat" class="card">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              <path d="M100 28 C150 28 176 70 172 112 C168 156 136 176 100 176 C62 176 30 158 28 114 C26 72 52 28 100 28 Z" fill="#ffb22e"/>
+              <ellipse cx="74" cy="80" rx="18" ry="12" fill="rgba(255,255,255,0.45)"/>
+            </svg>
+            <div class="label">Жир</div>
+            <div id="c-fat-note" class="small">остаётся</div>
+            <svg id="c-cross" width="220" height="220" viewBox="0 0 300 300">
+              <path id="c-x1" d="M40 40 L260 260" stroke="#ff3b2f" stroke-width="30" stroke-linecap="round"/>
+              <path id="c-x2" d="M260 40 L40 260" stroke="#ff3b2f" stroke-width="30" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div id="c-mus" class="card">
+            <svg width="220" height="200" viewBox="0 0 220 200">
+              <path d="M10 150 L10 120 C10 100 30 92 50 92 L96 92 C98 70 90 50 78 34 C72 26 78 14 90 16 L118 20 C132 22 136 34 132 46 L122 70 C146 72 172 92 174 120 C176 150 154 172 124 172 L30 172 C18 172 10 164 10 150 Z" fill="#f4f4f2"/><path d="M58 128 C78 106 118 106 140 132" fill="none" stroke="#c9c9c4" stroke-width="7" stroke-linecap="round"/>
+              <g id="c-flame">
+                <path d="M160 20 C176 46 196 60 190 90 C186 112 168 122 152 122 C134 122 120 110 120 92 C120 72 136 64 140 44 C150 56 156 62 160 20 Z" fill="#ff3b2f"/>
+                <path d="M156 70 C164 84 172 92 168 104 C164 114 156 116 150 116 C142 116 136 110 136 102 C136 92 146 88 156 70 Z" fill="#ffb22e"/>
+              </g>
+            </svg>
+            <div class="label" style="color:#ff3b2f">Мышцы</div>
+            <div id="c-bar"><div id="c-barfill"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- D · 18.95–22.2 · «сил нет — тренировку в мусорку» -->
+      <section id="sD" class="scene clip" data-start="18.95" data-duration="3.3" data-track-index="7">
+        <div class="stage">
+          <div id="d-h" class="h" style="top:10px">Тренировку — <span class="r">в мусорку</span></div>
+          <div id="d-card" class="card">
+            <svg width="100" height="70" viewBox="0 0 120 84">
+              <rect x="0" y="22" width="14" height="40" rx="4" fill="#c8ff2e"/>
+              <rect x="16" y="12" width="16" height="60" rx="4" fill="#c8ff2e"/>
+              <rect x="32" y="38" width="56" height="8" fill="#c8ff2e"/>
+              <rect x="88" y="12" width="16" height="60" rx="4" fill="#c8ff2e"/>
+              <rect x="106" y="22" width="14" height="40" rx="4" fill="#c8ff2e"/>
+            </svg>
+            <div class="label" style="font-size:46px">Тренировка</div>
+          </div>
+          <div id="d-bin">
+            <svg width="240" height="290" viewBox="0 0 240 290">
+              <path d="M36 80 L56 280 L184 280 L204 80 Z" fill="#202026" stroke="#f4f4f2" stroke-width="8" stroke-linejoin="round"/>
+              <path d="M90 116 L98 246 M120 116 V246 M150 116 L142 246" stroke="#8a8a90" stroke-width="8" stroke-linecap="round"/>
+              <g id="d-lid">
+                <rect x="20" y="44" width="200" height="22" rx="8" fill="#f4f4f2"/>
+                <rect x="96" y="26" width="48" height="22" rx="6" fill="none" stroke="#f4f4f2" stroke-width="8"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- E · 22.2–25.25 · «поешь за час-два: углеводы и немного белка» -->
+      <section id="sE" class="scene clip" data-start="22.2" data-duration="3.1" data-track-index="8">
+        <div class="stage">
+          <div id="e-h" class="h" style="top:10px">Поешь <em>до тренировки</em></div>
+          <div id="e-clock">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#c8ff2e" stroke-width="8"/>
+              <path d="M60 60 V30" stroke="#f4f4f2" stroke-width="8" stroke-linecap="round"/>
+              <path id="e-hand" d="M60 60 H86" stroke="#c8ff2e" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <div class="label" style="font-size:64px">за 1–2 часа</div>
+          </div>
+          <div id="e-donut">
+            <svg width="400" height="400" viewBox="0 0 400 400">
+              <circle cx="200" cy="200" r="150" fill="none" stroke="#2a2a30" stroke-width="70"/>
+              <circle id="e-carb" cx="200" cy="200" r="150" fill="none" stroke="#c8ff2e" stroke-width="70"
+                      stroke-dasharray="659.7 942.5" stroke-dashoffset="0" transform="rotate(-90 200 200)"/>
+              <circle id="e-prot" cx="200" cy="200" r="150" fill="none" stroke="#f4f4f2" stroke-width="70"
+                      stroke-dasharray="282.7 942.5" stroke-dashoffset="-659.7" transform="rotate(-90 200 200)"/>
+            </svg>
+          </div>
+          <div id="e-legend">
+            <div id="e-l1" class="leg"><span class="dot" style="background:#c8ff2e"></span>
+              <div><div class="pct" style="color:#c8ff2e">70%</div><div class="label">углеводы</div></div></div>
+            <div id="e-l2" class="leg"><span class="dot" style="background:#f4f4f2"></span>
+              <div><div class="pct">30%</div><div class="label">белок</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- F · 25.25–26.7 · «это не так уж сложно» -->
+      <section id="sF" class="scene clip" data-start="25.25" data-duration="1.45" data-track-index="9">
+        <div class="stage">
+          <svg id="f-check" width="300" height="300" viewBox="0 0 300 300">
+            <circle cx="150" cy="150" r="140" fill="#c8ff2e"/>
+            <path id="f-tick" d="M84 156 L130 200 L218 108" fill="none" stroke="#0c0c0e" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div id="f-h" class="h" style="top:500px">Это <em>не сложно</em></div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const pop = { scale: 0.6, opacity: 0, duration: 0.45, ease: "back.out(2)" };
+      const rise = { y: 60, opacity: 0, duration: 0.5, ease: "power3.out" };
+      const out = (sel, at) => tl.to(sel, { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, at);
+
+      // frame: brand + bubble appear as the hook closes into the circle
+      tl.from("#brand", { y: -40, opacity: 0, duration: 0.5, ease: "power3.out" }, 3.0);
+      tl.from("#ring", { scale: 0.85, duration: 0.5, ease: "back.out(2.5)" }, 3.0);
+      tl.from("#halo", { opacity: 0, duration: 0.6 }, 3.1);
+      tl.to("#halo", { scale: 1.08, opacity: 0.6, duration: 0.9, yoyo: true, repeat: 25, ease: "sine.inOut" }, 3.7);
+
+      // A · symptoms, each card on its word
+      tl.from("#a-h", rise, 3.1);
+      tl.from("#a-c1", { x: -120, opacity: 0, duration: 0.45, ease: "power3.out" }, 3.95);
+      tl.fromTo("#a-batfill", { scaleX: 1 }, { scaleX: 0.08, duration: 0.9, ease: "power2.in" }, 4.2);
+      tl.from("#a-c2", { x: 120, opacity: 0, duration: 0.45, ease: "power3.out" }, 5.05);
+      tl.to("#a-spiral", { rotation: 720, svgOrigin: "60 60", duration: 2.0, ease: "none" }, 5.1);
+      tl.from("#a-c3", { x: -120, opacity: 0, duration: 0.45, ease: "power3.out" }, 6.15);
+      tl.from("#a-arrow", { y: -30, opacity: 0, duration: 0.35, ease: "power2.out" }, 6.45);
+      tl.to("#a-c3", { x: 14, duration: 0.06, yoyo: true, repeat: 5, ease: "none" }, 6.6);
+      out("#sA .stage", 7.0);
+
+      // B · fuel gauge: needle falls to E, pump warning blinks
+      tl.from("#b-h", rise, 7.3);
+      tl.from("#b-gauge", { scale: 0.8, opacity: 0, duration: 0.5, ease: "back.out(1.6)" }, 7.35);
+      tl.fromTo("#b-needle", { rotation: 40, svgOrigin: "350 380" }, { rotation: -78, svgOrigin: "350 380", duration: 1.4, ease: "bounce.out" }, 8.4);
+      tl.from("#b-warn", { opacity: 0, duration: 0.2 }, 9.7);
+      tl.to("#b-pump", { opacity: 0.15, duration: 0.18, yoyo: true, repeat: 5, ease: "none" }, 9.9);
+      tl.from("#b-chip1", pop, 9.9);
+      tl.from("#b-chip2", pop, 10.5);
+      out("#sB .stage", 11.2);
+
+      // C · not fat (crossed out) → muscles burn
+      tl.from("#c-h", rise, 11.5);
+      tl.from("#c-fat", { y: 80, opacity: 0, duration: 0.5, ease: "power3.out" }, 13.2);
+      tl.from("#c-cross", { scale: 1.6, opacity: 0, duration: 0.3, ease: "power4.out" }, 13.95);
+      tl.from("#c-fat-note", { opacity: 0, duration: 0.3 }, 15.2);
+      tl.to("#c-fat", { rotation: -2, duration: 0.25, yoyo: true, repeat: 3, ease: "sine.inOut" }, 15.3);
+      tl.from("#c-mus", { y: 80, opacity: 0, duration: 0.5, ease: "power3.out" }, 16.9);
+      tl.from("#c-flame", { scale: 0, svgOrigin: "155 120", duration: 0.4, ease: "back.out(3)" }, 17.5);
+      tl.to("#c-flame", { scaleY: 1.12, svgOrigin: "155 120", duration: 0.18, yoyo: true, repeat: 5, ease: "sine.inOut" }, 17.9);
+      tl.fromTo("#c-barfill", { scaleX: 1 }, { scaleX: 0.25, duration: 1.0, ease: "power2.inOut" }, 17.9);
+      out("#sC .stage", 18.7);
+
+      // D · workout card tossed into the bin
+      tl.from("#d-h", rise, 19.0);
+      tl.from("#d-card", pop, 19.2);
+      tl.from("#d-bin", { y: 80, opacity: 0, duration: 0.4, ease: "power3.out" }, 19.6);
+      tl.to("#d-lid", { rotation: -35, svgOrigin: "20 55", duration: 0.3, ease: "power2.out" }, 20.6);
+      tl.to("#d-card", { x: 0, y: 360, scale: 0.2, rotation: 200, opacity: 0, duration: 0.7, ease: "power2.in" }, 20.9);
+      tl.to("#d-lid", { rotation: 0, svgOrigin: "20 55", duration: 0.3, ease: "bounce.out" }, 21.6);
+      tl.to("#d-bin", { rotation: 4, duration: 0.07, yoyo: true, repeat: 3, ease: "none" }, 21.6);
+      out("#sD .stage", 21.95);
+
+      // E · eat 1–2 h before: carbs 70 / protein 30
+      tl.from("#e-h", rise, 22.25);
+      tl.from("#e-clock", pop, 22.5);
+      tl.to("#e-hand", { rotation: 360, svgOrigin: "60 60", duration: 1.2, ease: "power2.inOut" }, 22.6);
+      tl.from("#e-donut", { scale: 0.7, opacity: 0, duration: 0.4, ease: "back.out(1.6)" }, 23.3);
+      tl.fromTo("#e-carb", { attr: { "stroke-dasharray": "0 942.5" } }, { attr: { "stroke-dasharray": "659.7 942.5" }, duration: 0.8, ease: "power2.out" }, 23.5);
+      tl.from("#e-l1", { x: 60, opacity: 0, duration: 0.4, ease: "power3.out" }, 23.55);
+      tl.fromTo("#e-prot", { attr: { "stroke-dasharray": "0 942.5" } }, { attr: { "stroke-dasharray": "282.7 942.5" }, duration: 0.6, ease: "power2.out" }, 24.5);
+      tl.from("#e-l2", { x: 60, opacity: 0, duration: 0.4, ease: "power3.out" }, 24.55);
+      out("#sE .stage", 25.05);
+
+      // F · stamp
+      tl.from("#f-check", { scale: 0, rotation: -30, duration: 0.5, ease: "back.out(2.5)" }, 25.3);
+      tl.from("#f-h", rise, 25.45);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

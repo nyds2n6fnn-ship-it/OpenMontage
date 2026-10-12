@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make setup)",
+      "Bash(make install)",
+      "Bash(make install-dev)",
+      "Bash(make install-gpu)",
+      "Bash(make venv)",
+      "Bash(make hyperframes-warm)",
+      "Bash(pip install *)",
+      "Bash(python -m pip install *)",
+      "Bash(.venv/bin/python -m pip install *)",
+      "Bash(uv venv *)",
+      "Bash(uv pip install *)",
+      "Bash(npm install)",
+      "Bash(npm install *)",
+      "Bash(npm ci)",
+      "Bash(npx --yes hyperframes *)"
+    ]
+  }
+}
